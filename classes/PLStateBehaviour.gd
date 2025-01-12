@@ -10,6 +10,7 @@ var state : PLState :
 			state.disabling.disconnect(_on_state_disabling)
 		value.enabling.connect(_on_state_enabling)
 		value.disabling.connect(_on_state_disabling)
+		state = value
 	get:
 		return state
 

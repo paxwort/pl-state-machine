@@ -20,7 +20,7 @@ func _ready():
 	_enable_current_state()
 
 func _transition_to_by_name(state_name : String):
-	var state : PLState = _states[state_name]
+	var state : PLState = _states.get(state_name)
 	if state == null:
 		return
 	_disable_current_state()
@@ -28,12 +28,13 @@ func _transition_to_by_name(state_name : String):
 	_enable_current_state()
 
 func _disable_current_state():
-	var current_state : PLState = _states[active_state_key]
+	var current_state : PLState = _states.get(active_state_key)
 	if current_state != null:
 		current_state.disable()
 
 func _enable_current_state():
-	var current_state : PLState = _states[active_state_key]
+
+	var current_state : PLState = _states.get(active_state_key)
 	if current_state != null:
 		current_state.enable()
 
