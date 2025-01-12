@@ -1,3 +1,4 @@
+@icon("res://addons/pl-state-machine/icons/PLState.svg")
 class_name PLState extends Node
 
 var machine : PLStateMachine

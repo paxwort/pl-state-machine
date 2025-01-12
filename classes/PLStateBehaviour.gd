@@ -1,5 +1,6 @@
 #PLStateBehaviour is a simple utility class with some QOL.
 #Inherit from this for prebuilt connections to the parent State
+@icon("res://addons/pl-state-machine/icons/PLStateBehaviour.svg")
 class_name PLStateBehaviour extends Node
 
 var state : PLState :

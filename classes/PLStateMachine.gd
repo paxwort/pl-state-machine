@@ -1,3 +1,4 @@
+@icon("res://addons/pl-state-machine/icons/PLStateMachine.svg")
 class_name PLStateMachine extends Node
 
 var _states : Dictionary = {}
