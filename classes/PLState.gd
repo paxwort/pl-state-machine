@@ -17,7 +17,7 @@ func _on_child_entered_tree(node : Node):
 	if node is PLStateBehaviour:
 		node.state = self
 
-func enable():
+func enable(prev_state : String = ""):
 	is_enabled = true;
 	enabling.emit()
 	process_mode = PROCESS_MODE_INHERIT
