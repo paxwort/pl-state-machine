@@ -1,8 +1,10 @@
+@icon("res://addons/pl-state-machine/icons/PLStateTransition.svg")
 @tool
 class_name PLStateTransition extends Node
-
 var source_state : PLState
 @export var target_state : PLState
+@export var transition_disabled : bool
+
 var connected_transitions : Array[PLStateTransition] = []
 signal transitioned
 
@@ -18,11 +20,13 @@ func _get_configuration_warnings() -> PackedStringArray:
 	return warnings
 
 func _enter_tree() -> void:
-	source_state = get_parent() as PLState
-	target_state.transition_conditions_changed.connect(_connect_transitions)
+	if not Engine.is_editor_hint():
+		source_state = get_parent() as PLState
+		target_state.transition_conditions_changed.connect(_connect_transitions)
 	
 func _ready():
-	_connect_transitions()
+	if not Engine.is_editor_hint():
+		_connect_transitions()
 
 func _connect_transitions():
 	connected_transitions.clear()
@@ -31,7 +35,8 @@ func _connect_transitions():
 			connected_transitions.push_back(transition as PLStateTransition)
 
 func transition():
-	_start_transition()
+	if !transition_disabled:
+		_start_transition()
 
 func _start_transition():
 	if source_state.machine.transition_lock(self):

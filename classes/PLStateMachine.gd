@@ -13,7 +13,6 @@ func _enter_tree():
 func _ready():
 	if !Engine.is_editor_hint():
 		_start_machine()
-		
 	
 func _start_machine():
 	if initial_state:
@@ -40,6 +39,8 @@ func _next_in_path() -> void:
 
 var transition_lock_owner : PLStateTransition = null
 func transition_lock(transition : PLStateTransition) -> bool:
+	if transition.source_state != active_state:
+		return false
 	if transition_lock_owner != null:
 		return false
 	else:
@@ -96,11 +97,11 @@ func _state_child_exiting_tree(node : Node, state : PLState):
 func _get_path_to_state(source_state : PLState, target_state : PLState) -> Array[PLStateTransition]:
 	if !_states.has(target_state) or !_states.has(source_state):
 		return []
-	
 	var visited = {}
 	var next_transitions = []
 	for trans in _states[source_state]:
-		next_transitions.push_back([0, trans, null])
+		if trans.transition_disabled == false:
+			next_transitions.push_back([0, trans, null])
 	
 	while(next_transitions.size() > 0):
 		next_transitions.sort_custom(func(a, b) : return a[0] > b[0])
@@ -120,7 +121,8 @@ func _get_path_to_state(source_state : PLState, target_state : PLState) -> Array
 			return path
 		
 		for next_transition in transition.connected_transitions:
-			if !visited.has(next_transition) \
-					or visited[next_transition][0] > distance + 1:
+			if (next_transition.transition_disabled == false) \
+					and (!visited.has(next_transition) \
+					or visited[next_transition][0] > distance + 1):
 				next_transitions.push_back([distance + 1, next_transition, transition])
 	return []
