@@ -25,6 +25,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 func _enter_tree():
 	if(not Engine.is_editor_hint()):
 		machine = _find_machine()
+	process_mode = PROCESS_MODE_DISABLED
 
 func _find_machine() -> PLStateMachine:
 	var node = self
@@ -39,7 +40,9 @@ func _find_machine() -> PLStateMachine:
 func enter_state():
 	is_enabled = true;
 	entered_state.emit()
+	process_mode = PROCESS_MODE_INHERIT
 
 func exit_state():
 	is_enabled = false;
 	exited_state.emit()
+	process_mode = PROCESS_MODE_DISABLED
