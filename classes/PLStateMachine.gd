@@ -4,25 +4,23 @@ class_name PLStateMachine extends Node
 var _states : Dictionary = {}
 var _root_transition : PLStateTransition
 var active_state : PLState
+@export var initial_state : PLState
 
 func _enter_tree():
 	child_entered_tree.connect(_child_entered_tree)
 	child_exiting_tree.connect(_child_exiting_tree)
-	if !Engine.is_editor_hint():
-		_construct_machine()
 
 func _ready():
 	if !Engine.is_editor_hint():
-		_root_transition.transition()
+		_start_machine()
+		
 	
-func _construct_machine():
-	var new_state = PLState.new()
-	new_state.name = "___%s_DEFAULT"%name
-	add_child(new_state)
-	new_state.owner = self
-	_root_transition = find_children("*", "PLStateTransition", false).front()
-	_root_transition.reparent(new_state)
-	active_state = new_state
+func _start_machine():
+	if initial_state:
+		active_state = initial_state
+	else:
+		active_state = _states.keys().front()
+	active_state.enter_state()
 
 var current_path : Array[PLStateTransition] = []
 

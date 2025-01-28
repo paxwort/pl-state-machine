@@ -39,9 +39,7 @@ func _find_machine() -> PLStateMachine:
 func enter_state():
 	is_enabled = true;
 	entered_state.emit()
-	process_mode = PROCESS_MODE_INHERIT
 
 func exit_state():
 	is_enabled = false;
 	exited_state.emit()
-	process_mode = PROCESS_MODE_DISABLED
