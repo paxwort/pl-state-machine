@@ -28,8 +28,6 @@ func transition_to(target_state : PLState) -> void:
 		push_warning("The PLStateMachine %s tried to transition to a state that it was not aware of"%name)
 		return
 	current_path = _get_path_to_state(active_state, target_state)
-	if current_path.size() == 0:
-		return
 	_next_in_path()
 
 func _next_in_path() -> void:
@@ -65,35 +63,6 @@ func _state_exited(state : PLState):
 	else:
 		push_warning("A state was exited when the StateMachine %s was not aware of its previous activity"%name)
 
-func _child_entered_tree(node : Node):
-	if node is PLState:
-		_states[node] = []
-		node.child_entered_tree.connect(_state_child_entered_tree.bind(node))
-		node.child_exiting_tree.connect(_state_child_exiting_tree.bind(node))
-		node.exited_state.connect(_state_exited.bind(node))
-		node.entered_state.connect(_state_entered.bind(node))
-
-func _child_exiting_tree(node : Node):
-	if node is PLState:
-		_states.erase(node)
-		if node.child_entered_tree.is_connected(_state_child_entered_tree):
-			node.child_entered_tree.disconnect(_state_child_entered_tree)
-		if node.child_exiting_tree.is_connected(_state_child_exiting_tree):
-			node.child_exiting_tree.disconnect(_state_child_exiting_tree)
-		if node.exited_state.is_connected(_state_exited):
-			node.exited_state.disconnect(_state_exited)
-		if node.entered_state.is_connected(_state_entered):
-			node.exited_state.disconnect(_state_entered)
-
-func _state_child_entered_tree(node : Node, state : PLState):
-	if node is PLStateTransition and _states.has(state):
-		if not _states[state].has(node):
-			_states[state].push_back(node)
-	
-func _state_child_exiting_tree(node : Node, state : PLState):
-	if node is PLStateTransition and _states.has(state):
-		_states[state].erase(node)
-
 func _get_path_to_state(source_state : PLState, target_state : PLState) -> Array[PLStateTransition]:
 	if !_states.has(target_state) or !_states.has(source_state):
 		return []
@@ -126,3 +95,32 @@ func _get_path_to_state(source_state : PLState, target_state : PLState) -> Array
 					or visited[next_transition][0] > distance + 1):
 				next_transitions.push_back([distance + 1, next_transition, transition])
 	return []
+
+func _child_entered_tree(node : Node):
+	if node is PLState:
+		_states[node] = []
+		node.child_entered_tree.connect(_state_child_entered_tree.bind(node))
+		node.child_exiting_tree.connect(_state_child_exiting_tree.bind(node))
+		node.exited_state.connect(_state_exited.bind(node))
+		node.entered_state.connect(_state_entered.bind(node))
+
+func _child_exiting_tree(node : Node):
+	if node is PLState:
+		_states.erase(node)
+		if node.child_entered_tree.is_connected(_state_child_entered_tree):
+			node.child_entered_tree.disconnect(_state_child_entered_tree)
+		if node.child_exiting_tree.is_connected(_state_child_exiting_tree):
+			node.child_exiting_tree.disconnect(_state_child_exiting_tree)
+		if node.exited_state.is_connected(_state_exited):
+			node.exited_state.disconnect(_state_exited)
+		if node.entered_state.is_connected(_state_entered):
+			node.exited_state.disconnect(_state_entered)
+
+func _state_child_entered_tree(node : Node, state : PLState):
+	if node is PLStateTransition and _states.has(state):
+		if not _states[state].has(node):
+			_states[state].push_back(node)
+	
+func _state_child_exiting_tree(node : Node, state : PLState):
+	if node is PLStateTransition and _states.has(state):
+		_states[state].erase(node)

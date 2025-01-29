@@ -1,0 +1,398 @@
+[gd_scene load_steps=15 format=3 uid="uid://dp75lp8ew2rdm"]
+
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/CoreSimon.gd" id="1_euuf6"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/classes/PLStateMachine.gd" id="2_tp8ru"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/classes/PLState.gd" id="3_5jr5n"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/classes/PLStateTransition.gd" id="4_v1sfh"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/transition_display.gd" id="5_i1snx"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/ShowHideMenu.gd" id="6_sn32k"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/state_rect.gd" id="7_73672"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/ShowHideGame.gd" id="8_rybjo"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/SimonSay.gd" id="9_10djf"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/SimonListen.gd" id="10_x55kc"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/HoldStateAndFlashPanel.gd" id="11_d6ri8"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/SimonColorRect.gd" id="12_tnyo0"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/StartGameButton.gd" id="13_lya34"]
+
+[sub_resource type="GDScript" id="GDScript_nblgm"]
+script/source = "extends Node
+
+func trigger() -> void:
+	pass # Replace with function body.
+"
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Simon" type="Node" parent="." node_paths=PackedStringArray("Buttons")]
+unique_name_in_owner = true
+script = ExtResource("1_euuf6")
+Buttons = [NodePath("../Game/Button_Red"), NodePath("../Game/Button_Yellow"), NodePath("../Game/Button_Blue"), NodePath("../Game/Button_Green")]
+
+[node name="GameState" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+unique_name_in_owner = true
+script = ExtResource("2_tp8ru")
+initial_state = NodePath("STATE_Menu")
+
+[node name="STATE_Menu" type="Node" parent="GameState"]
+unique_name_in_owner = true
+script = ExtResource("3_5jr5n")
+
+[node name="Transition -> Begin Simon" type="Node" parent="GameState/STATE_Menu" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_v1sfh")
+target_state = NodePath("../../STATE_Begin_Simon")
+
+[node name="Line2D" type="Line2D" parent="GameState/STATE_Menu/Transition -> Begin Simon"]
+points = PackedVector2Array(108, 56, 109, 99, 95, 83, 122, 83, 109, 100)
+width = 5.0
+script = ExtResource("5_i1snx")
+
+[node name="Entered -> Show Menu" type="Node" parent="GameState/STATE_Menu"]
+script = ExtResource("6_sn32k")
+
+[node name="Exited -> Hide Menu" type="Node" parent="GameState/STATE_Menu"]
+script = ExtResource("6_sn32k")
+hide = true
+
+[node name="Dia_STATE_Menu" type="ColorRect" parent="GameState/STATE_Menu"]
+offset_right = 210.0
+offset_bottom = 54.0
+color = Color(0.26, 0.26, 0.26, 1)
+script = ExtResource("7_73672")
+
+[node name="Label" type="Label" parent="GameState/STATE_Menu/Dia_STATE_Menu"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 13.0
+offset_right = 148.0
+offset_bottom = 36.0
+text = "STATE_Menu"
+
+[node name="STATE_Begin_Simon" type="Node" parent="GameState"]
+script = ExtResource("3_5jr5n")
+allow_pass_through = true
+
+[node name="Show Game" type="Node" parent="GameState/STATE_Begin_Simon"]
+script = ExtResource("8_rybjo")
+
+[node name="Transition -> Simon_Say" type="Node" parent="GameState/STATE_Begin_Simon" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_v1sfh")
+target_state = NodePath("../../STATE_Simon_Say")
+
+[node name="Line2D2" type="Line2D" parent="GameState/STATE_Begin_Simon/Transition -> Simon_Say"]
+position = Vector2(0, 96)
+points = PackedVector2Array(108, 56, 109, 99, 95, 83, 122, 83, 109, 100)
+width = 5.0
+script = ExtResource("5_i1snx")
+
+[node name="Dia_STATE_Begin_Simon" type="ColorRect" parent="GameState/STATE_Begin_Simon"]
+offset_top = 98.0
+offset_right = 210.0
+offset_bottom = 152.0
+color = Color(0.26, 0.26, 0.26, 1)
+script = ExtResource("7_73672")
+
+[node name="Label" type="Label" parent="GameState/STATE_Begin_Simon/Dia_STATE_Begin_Simon"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 13.0
+offset_right = 188.0
+offset_bottom = 36.0
+text = "STATE_Begin_Simon
+"
+
+[node name="STATE_Simon_Say" type="Node" parent="GameState"]
+unique_name_in_owner = true
+script = ExtResource("3_5jr5n")
+
+[node name="Transition -> Simon_Listen" type="Node" parent="GameState/STATE_Simon_Say" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_v1sfh")
+target_state = NodePath("../../STATE_Simon_Listen")
+
+[node name="Line2D3" type="Line2D" parent="GameState/STATE_Simon_Say/Transition -> Simon_Listen"]
+position = Vector2(0, 194)
+points = PackedVector2Array(108, 56, 109, 99, 95, 83, 122, 83, 109, 100)
+width = 5.0
+script = ExtResource("5_i1snx")
+
+[node name="SimonSay" type="Node" parent="GameState/STATE_Simon_Say"]
+script = ExtResource("9_10djf")
+
+[node name="TriggerAudioCue" type="Node" parent="GameState/STATE_Simon_Say"]
+script = SubResource("GDScript_nblgm")
+
+[node name="Dia_STATE_Simon_Say" type="ColorRect" parent="GameState/STATE_Simon_Say"]
+offset_top = 195.0
+offset_right = 210.0
+offset_bottom = 249.0
+color = Color(0.26, 0.26, 0.26, 1)
+script = ExtResource("7_73672")
+
+[node name="Label" type="Label" parent="GameState/STATE_Simon_Say/Dia_STATE_Simon_Say"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 13.0
+offset_right = 148.0
+offset_bottom = 36.0
+text = "STATE_Simon_Say"
+
+[node name="STATE_Simon_Listen" type="Node" parent="GameState"]
+unique_name_in_owner = true
+script = ExtResource("3_5jr5n")
+
+[node name="Transition -> Simon_Correct" type="Node" parent="GameState/STATE_Simon_Listen" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_v1sfh")
+target_state = NodePath("../../STATE_Simon_Correct")
+
+[node name="Line2D4" type="Line2D" parent="GameState/STATE_Simon_Listen/Transition -> Simon_Correct"]
+points = PackedVector2Array(41, 346, 42, 384, 72, 386, 64, 369, 60, 405, 72, 387)
+width = 5.0
+script = ExtResource("5_i1snx")
+
+[node name="Transition -> Simon_Incorrect" type="Node" parent="GameState/STATE_Simon_Listen" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_v1sfh")
+target_state = NodePath("../../STATE_Simon_Incorrect")
+
+[node name="Line2D5" type="Line2D" parent="GameState/STATE_Simon_Listen/Transition -> Simon_Incorrect"]
+position = Vector2(-3, 72)
+points = PackedVector2Array(21, 278, 19, 387, 72, 386, 64, 369, 60, 405, 72, 387)
+width = 5.0
+script = ExtResource("5_i1snx")
+
+[node name="Entered -> SimonListen" type="Node" parent="GameState/STATE_Simon_Listen"]
+script = ExtResource("10_x55kc")
+
+[node name="Dia_STATE_Simon_Listen" type="ColorRect" parent="GameState/STATE_Simon_Listen"]
+offset_top = 296.0
+offset_right = 210.0
+offset_bottom = 350.0
+color = Color(0.26, 0.26, 0.26, 1)
+script = ExtResource("7_73672")
+
+[node name="Label" type="Label" parent="GameState/STATE_Simon_Listen/Dia_STATE_Simon_Listen"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 13.0
+offset_right = 188.0
+offset_bottom = 36.0
+text = "STATE_Simon_Listen"
+
+[node name="STATE_Simon_Correct" type="Node" parent="GameState"]
+script = ExtResource("3_5jr5n")
+allow_pass_through = true
+
+[node name="Transition -> Simon_Say" type="Node" parent="GameState/STATE_Simon_Correct" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_v1sfh")
+target_state = NodePath("../../STATE_Simon_Say")
+
+[node name="Line2D6" type="Line2D" parent="GameState/STATE_Simon_Correct/Transition -> Simon_Say"]
+points = PackedVector2Array(260, 349, 258, 223, 216, 221, 233, 206, 231, 234, 217, 220)
+width = 5.0
+script = ExtResource("5_i1snx")
+
+[node name="Entered -> HoldStateAndFlashPanel" type="Node" parent="GameState/STATE_Simon_Correct" node_paths=PackedStringArray("panel")]
+script = ExtResource("11_d6ri8")
+panel = NodePath("../../../CorrectPanel")
+
+[node name="Dia_STATE_Simon_Correct" type="ColorRect" parent="GameState/STATE_Simon_Correct"]
+offset_left = 77.0
+offset_top = 369.0
+offset_right = 287.0
+offset_bottom = 423.0
+color = Color(0.26, 0.26, 0.26, 1)
+script = ExtResource("7_73672")
+
+[node name="Label" type="Label" parent="GameState/STATE_Simon_Correct/Dia_STATE_Simon_Correct"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 13.0
+offset_right = 188.0
+offset_bottom = 36.0
+text = "STATE_Simon_Correct"
+
+[node name="STATE_Simon_Incorrect" type="Node" parent="GameState"]
+script = ExtResource("3_5jr5n")
+allow_pass_through = true
+
+[node name="Transition -> Menu" type="Node" parent="GameState/STATE_Simon_Incorrect" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_v1sfh")
+target_state = NodePath("../../STATE_Menu")
+
+[node name="Line2D7" type="Line2D" parent="GameState/STATE_Simon_Incorrect/Transition -> Menu"]
+points = PackedVector2Array(290, 458, 321, 459, 318, 26, 228, 25, 252, 4, 250, 46, 228, 23)
+width = 5.0
+script = ExtResource("5_i1snx")
+
+[node name="Entered -> HoldStateAndFlashPanel" type="Node" parent="GameState/STATE_Simon_Incorrect" node_paths=PackedStringArray("panel")]
+script = ExtResource("11_d6ri8")
+panel = NodePath("../../../IncorrectPanel")
+
+[node name="Entered -> Hide Game" type="Node" parent="GameState/STATE_Simon_Incorrect"]
+script = ExtResource("8_rybjo")
+hide = true
+
+[node name="Dia_STATE_Simon_Incorrect" type="ColorRect" parent="GameState/STATE_Simon_Incorrect"]
+offset_left = 77.0
+offset_top = 438.0
+offset_right = 287.0
+offset_bottom = 492.0
+color = Color(0.26, 0.26, 0.26, 1)
+script = ExtResource("7_73672")
+
+[node name="Label" type="Label" parent="GameState/STATE_Simon_Incorrect/Dia_STATE_Simon_Incorrect"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 195.0
+offset_bottom = 39.0
+text = "STATE_Simon_Incorrect"
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 448.0
+offset_right = 847.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 64
+text = "SIMON SAYS!"
+
+[node name="Game" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Button_Red" type="Button" parent="Game"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 333.0
+offset_top = 150.0
+offset_right = 533.0
+offset_bottom = 350.0
+
+[node name="SimonColorRect" type="ColorRect" parent="Game/Button_Red"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 200.0
+mouse_filter = 1
+color = Color(1, 0, 0, 0.490196)
+script = ExtResource("12_tnyo0")
+say_color = Color(0.94902, 0, 0, 1)
+ordinary_color = Color(0.94902, 0, 0, 0.545098)
+
+[node name="Button_Yellow" type="Button" parent="Game"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 544.0
+offset_top = 150.0
+offset_right = 744.0
+offset_bottom = 350.0
+
+[node name="SimonColorRect" type="ColorRect" parent="Game/Button_Yellow"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 200.0
+mouse_filter = 1
+color = Color(1, 1, 0, 0.490196)
+script = ExtResource("12_tnyo0")
+say_color = Color(1, 1, 0, 1)
+ordinary_color = Color(1, 1, 0, 0.490196)
+
+[node name="Button_Blue" type="Button" parent="Game"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 333.0
+offset_top = 361.0
+offset_right = 533.0
+offset_bottom = 561.0
+
+[node name="SimonColorRect" type="ColorRect" parent="Game/Button_Blue"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 200.0
+mouse_filter = 1
+color = Color(0, 0, 1, 0.490196)
+script = ExtResource("12_tnyo0")
+say_color = Color(0, 0, 1, 1)
+ordinary_color = Color(0, 0, 1, 0.490196)
+
+[node name="Button_Green" type="Button" parent="Game"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 544.0
+offset_top = 361.0
+offset_right = 744.0
+offset_bottom = 561.0
+
+[node name="SimonColorRect" type="ColorRect" parent="Game/Button_Green"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 200.0
+mouse_filter = 1
+color = Color(0, 1, 0, 0.490196)
+script = ExtResource("12_tnyo0")
+say_color = Color(0, 1, 0, 1)
+ordinary_color = Color(0, 1, 0, 0.490196)
+
+[node name="CorrectPanel" type="Panel" parent="."]
+modulate = Color(0, 0, 0, 0)
+layout_mode = 0
+offset_left = 437.0
+offset_top = 272.0
+offset_right = 852.0
+offset_bottom = 415.0
+
+[node name="Label" type="Label" parent="CorrectPanel"]
+layout_mode = 0
+offset_right = 251.0
+offset_bottom = 73.0
+theme_override_font_sizes/font_size = 26
+text = "Correct!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IncorrectPanel" type="Panel" parent="."]
+modulate = Color(0, 0, 0, 0)
+layout_mode = 0
+offset_left = 437.0
+offset_top = 272.0
+offset_right = 852.0
+offset_bottom = 415.0
+
+[node name="Label" type="Label" parent="IncorrectPanel"]
+layout_mode = 0
+offset_right = 251.0
+offset_bottom = 73.0
+theme_override_font_sizes/font_size = 26
+text = "WRONG. YOU FAILED."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Menu" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StartGameButton" type="Button" parent="Menu"]
+layout_mode = 0
+offset_left = 471.0
+offset_top = 302.0
+offset_right = 817.0
+offset_bottom = 398.0
+theme_override_font_sizes/font_size = 64
+text = "New Game"
+script = ExtResource("13_lya34")
+
+[connection signal="entered_state" from="GameState/STATE_Menu" to="GameState/STATE_Menu/Entered -> Show Menu" method="show_hide"]
+[connection signal="exited_state" from="GameState/STATE_Menu" to="GameState/STATE_Menu/Exited -> Hide Menu" method="show_hide"]
+[connection signal="entered_state" from="GameState/STATE_Begin_Simon" to="GameState/STATE_Begin_Simon/Show Game" method="show_hide"]
+[connection signal="entered_state" from="GameState/STATE_Begin_Simon" to="Simon" method="set_pattern_length" binds= [3]]
+[connection signal="say_color" from="GameState/STATE_Simon_Say/SimonSay" to="Game/Button_Red/SimonColorRect" method="_on_say_color"]
+[connection signal="say_color" from="GameState/STATE_Simon_Say/SimonSay" to="Game/Button_Yellow/SimonColorRect" method="_on_say_color"]
+[connection signal="say_color" from="GameState/STATE_Simon_Say/SimonSay" to="Game/Button_Blue/SimonColorRect" method="_on_say_color"]
+[connection signal="say_color" from="GameState/STATE_Simon_Say/SimonSay" to="Game/Button_Green/SimonColorRect" method="_on_say_color"]
+[connection signal="entered_state" from="GameState/STATE_Simon_Correct" to="GameState/STATE_Simon_Correct/Entered -> HoldStateAndFlashPanel" method="_hold_and_flash_panel"]
+[connection signal="entered_state" from="GameState/STATE_Simon_Incorrect" to="GameState/STATE_Simon_Incorrect/Entered -> HoldStateAndFlashPanel" method="_hold_and_flash_panel"]
+[connection signal="entered_state" from="GameState/STATE_Simon_Incorrect" to="GameState/STATE_Simon_Incorrect/Entered -> Hide Game" method="show_hide"]

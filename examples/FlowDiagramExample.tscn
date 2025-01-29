@@ -1,0 +1,195 @@
+[gd_scene load_steps=12 format=3 uid="uid://bpdou2ogs0w6h"]
+
+[ext_resource type="Script" path="res://addons/pl-state-machine/classes/PLState.gd" id="1_db3w5"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/classes/PLStateMachine.gd" id="2_v6fcd"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/state_button.gd" id="3_t62fw"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/classes/PLStateTransition.gd" id="4_i061u"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/transition_display.gd" id="5_cs4jo"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/transition_button.gd" id="6_xyad5"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/transition_blocker.gd" id="7_vuh1c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptcd6"]
+bg_color = Color(0.137789, 0.390293, 0.758503, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t307c"]
+bg_color = Color(0.818744, 0.245713, 0.297389, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_77ix7"]
+bg_color = Color(0.277386, 0.510182, 0.209303, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p5p2o"]
+bg_color = Color(0.976477, 0.748625, 0.217509, 1)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="StartState2" type="Node" parent="."]
+process_mode = 4
+script = ExtResource("1_db3w5")
+
+[node name="PLStateMachine" type="Node" parent="."]
+script = ExtResource("2_v6fcd")
+
+[node name="StartState" type="Node" parent="PLStateMachine"]
+script = ExtResource("1_db3w5")
+
+[node name="ButtonStart" type="Button" parent="PLStateMachine/StartState"]
+process_mode = 3
+offset_left = 312.0
+offset_right = 466.0
+offset_bottom = 39.0
+text = "Start"
+script = ExtResource("3_t62fw")
+
+[node name="Transition ->Green" type="Node" parent="PLStateMachine/StartState" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_i061u")
+target_state = NodePath("../../GreenState")
+
+[node name="Line2D" type="Line2D" parent="PLStateMachine/StartState/Transition ->Green"]
+position = Vector2(206.344, 79.9452)
+points = PackedVector2Array(104.656, -27.9452, 12.6558, 67.0548, 18.6558, 15.0548, 59.6558, 63.0548, 21.6558, 70.0548)
+end_cap_mode = 2
+script = ExtResource("5_cs4jo")
+
+[node name="BlueState" type="Node" parent="PLStateMachine"]
+script = ExtResource("1_db3w5")
+
+[node name="ButtonBlue" type="Button" parent="PLStateMachine/BlueState"]
+process_mode = 3
+offset_left = 743.0
+offset_top = 221.0
+offset_right = 897.0
+offset_bottom = 260.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_ptcd6")
+text = "Go To Blue"
+script = ExtResource("3_t62fw")
+
+[node name="Transition ->Yellow2" type="Node" parent="PLStateMachine/BlueState" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_i061u")
+target_state = NodePath("../../YellowState")
+
+[node name="Line2D3" type="Line2D" parent="PLStateMachine/BlueState/Transition ->Yellow2"]
+position = Vector2(609, 167)
+rotation = -5.57856
+points = PackedVector2Array(104.656, -27.9452, 66.7833, 11.1622, 37.7663, 41.1255, 12.6558, 67.0548, 18.6558, 15.0548, 59.6558, 63.0548, 21.6558, 70.0548)
+end_cap_mode = 2
+script = ExtResource("5_cs4jo")
+
+[node name="RedState" type="Node" parent="PLStateMachine"]
+script = ExtResource("1_db3w5")
+
+[node name="ButtonRed" type="Button" parent="PLStateMachine/RedState"]
+process_mode = 3
+offset_left = 113.0
+offset_top = 384.0
+offset_right = 267.0
+offset_bottom = 423.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_t307c")
+text = "Go To Red"
+script = ExtResource("3_t62fw")
+
+[node name="Transition ->Yellow" type="Node" parent="PLStateMachine/RedState" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_i061u")
+target_state = NodePath("../../YellowState")
+
+[node name="Line2D3" type="Line2D" parent="PLStateMachine/RedState/Transition ->Yellow"]
+position = Vector2(390, 379)
+rotation = -3.08122
+points = PackedVector2Array(104.656, -27.9452, 66.7833, 11.1622, 37.7663, 41.1255, 12.6558, 67.0548, 18.6558, 15.0548, 59.6558, 63.0548, 21.6558, 70.0548)
+end_cap_mode = 2
+script = ExtResource("5_cs4jo")
+
+[node name="GreenState" type="Node" parent="PLStateMachine"]
+script = ExtResource("1_db3w5")
+control_processing = false
+
+[node name="ButtonGreen" type="Button" parent="PLStateMachine/GreenState"]
+process_mode = 3
+offset_left = 60.0
+offset_top = 157.0
+offset_right = 214.0
+offset_bottom = 196.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_77ix7")
+text = "Go To Green"
+script = ExtResource("3_t62fw")
+
+[node name="Transition ->Red" type="Node" parent="PLStateMachine/GreenState" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_i061u")
+target_state = NodePath("../../RedState")
+
+[node name="Line2D2" type="Line2D" parent="PLStateMachine/GreenState/Transition ->Red"]
+position = Vector2(94, 334)
+rotation = -0.950289
+points = PackedVector2Array(104.656, -27.9452, 12.6558, 67.0548, 18.6558, 15.0548, 59.6558, 63.0548, 21.6558, 70.0548)
+end_cap_mode = 2
+script = ExtResource("5_cs4jo")
+
+[node name="Button" type="Button" parent="PLStateMachine/GreenState/Transition ->Red"]
+process_mode = 3
+offset_left = 18.0
+offset_top = 247.0
+offset_right = 108.0
+offset_bottom = 324.0
+text = "call
+transition
+directly"
+script = ExtResource("6_xyad5")
+
+[node name="YellowState" type="Node" parent="PLStateMachine"]
+script = ExtResource("1_db3w5")
+allow_pass_through = true
+
+[node name="ButtonYellow" type="Button" parent="PLStateMachine/YellowState"]
+process_mode = 3
+offset_left = 346.0
+offset_top = 247.0
+offset_right = 561.0
+offset_bottom = 293.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_p5p2o")
+text = "Go To Yellow
+Allows Passthrough
+"
+script = ExtResource("3_t62fw")
+
+[node name="Transition ->Green" type="Node" parent="PLStateMachine/YellowState" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_i061u")
+target_state = NodePath("../../GreenState")
+
+[node name="Line2D4" type="Line2D" parent="PLStateMachine/YellowState/Transition ->Green"]
+position = Vector2(298, 150)
+rotation = 1.42681
+points = PackedVector2Array(104.656, -27.9452, 66.7833, 11.1622, 37.7663, 41.1255, 12.6558, 67.0548, 18.6558, 15.0548, 59.6558, 63.0548, 21.6558, 70.0548)
+end_cap_mode = 2
+script = ExtResource("5_cs4jo")
+
+[node name="CheckButton" type="CheckButton" parent="PLStateMachine/YellowState/Transition ->Green"]
+process_mode = 3
+offset_left = 285.0
+offset_top = 185.0
+offset_right = 335.0
+offset_bottom = 215.0
+script = ExtResource("7_vuh1c")
+
+[node name="Label" type="Label" parent="PLStateMachine/YellowState/Transition ->Green"]
+offset_left = 329.0
+offset_top = 188.0
+offset_right = 513.0
+offset_bottom = 211.0
+text = "Disable this Transition"
+
+[node name="Transition ->Blue" type="Node" parent="PLStateMachine/YellowState" node_paths=PackedStringArray("target_state")]
+script = ExtResource("4_i061u")
+target_state = NodePath("../../BlueState")
+
+[node name="Line2D5" type="Line2D" parent="PLStateMachine/YellowState/Transition ->Blue"]
+position = Vector2(692, 316)
+rotation = -2.48406
+points = PackedVector2Array(104.656, -27.9452, 66.7833, 11.1622, 37.7663, 41.1255, 12.6558, 67.0548, 18.6558, 15.0548, 59.6558, 63.0548, 21.6558, 70.0548)
+end_cap_mode = 2
+script = ExtResource("5_cs4jo")
+
+[connection signal="pressed" from="PLStateMachine/StartState/ButtonStart" to="PLStateMachine/StartState/ButtonStart" method="go_to"]
+[connection signal="pressed" from="PLStateMachine/BlueState/ButtonBlue" to="PLStateMachine/BlueState/ButtonBlue" method="go_to"]
+[connection signal="pressed" from="PLStateMachine/RedState/ButtonRed" to="PLStateMachine/RedState/ButtonRed" method="go_to"]
+[connection signal="pressed" from="PLStateMachine/GreenState/ButtonGreen" to="PLStateMachine/GreenState/ButtonGreen" method="go_to"]
+[connection signal="pressed" from="PLStateMachine/YellowState/ButtonYellow" to="PLStateMachine/YellowState/ButtonYellow" method="go_to"]

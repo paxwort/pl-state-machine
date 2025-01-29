@@ -10,7 +10,6 @@ signal transitioned
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
-	
 	if get_parent() is PLStateMachine:
 		pass
 	elif not get_parent() is PLState:
@@ -40,6 +39,8 @@ func transition():
 
 func _start_transition():
 	if source_state.machine.transition_lock(self):
+		if source_state.exit_locked:
+			await source_state.exit_unlocked
 		source_state.exited_state.connect(_end_transition)
 		source_state.exit_state()
 

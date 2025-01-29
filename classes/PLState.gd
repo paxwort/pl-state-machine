@@ -17,6 +17,10 @@ signal transition_conditions_changed
 		return allow_pass_through
 @export var control_processing = true
 
+var exit_locks : Array[Node]
+var exit_locked : bool:
+	get(): return exit_locks.size() > 0
+signal exit_unlocked
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
@@ -51,3 +55,12 @@ func exit_state():
 	exited_state.emit()
 	if control_processing:
 		process_mode = PROCESS_MODE_DISABLED
+
+func lock_exit(node : Node):
+	exit_locks.push_back(node)
+	
+func release_exit_lock(node : Node):
+	exit_locks.erase(node)
+	if not exit_locked:
+		exit_unlocked.emit()
+	
