@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dp75lp8ew2rdm"]
+[gd_scene load_steps=16 format=3 uid="uid://dp75lp8ew2rdm"]
 
 [ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/CoreSimon.gd" id="1_euuf6"]
 [ext_resource type="Script" path="res://addons/pl-state-machine/classes/PLStateMachine.gd" id="2_tp8ru"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/SimonSay.gd" id="9_10djf"]
 [ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/SimonListen.gd" id="10_x55kc"]
 [ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/HoldStateAndFlashPanel.gd" id="11_d6ri8"]
+[ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/SimonButton.gd" id="12_jibsw"]
 [ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/SimonColorRect.gd" id="12_tnyo0"]
 [ext_resource type="Script" path="res://addons/pl-state-machine/examples/classes/Simon_Says/StartGameButton.gd" id="13_lya34"]
 
@@ -25,10 +26,9 @@ func trigger() -> void:
 layout_mode = 3
 anchors_preset = 0
 
-[node name="Simon" type="Node" parent="." node_paths=PackedStringArray("Buttons")]
+[node name="Simon" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("1_euuf6")
-Buttons = [NodePath("../Game/Button_Red"), NodePath("../Game/Button_Yellow"), NodePath("../Game/Button_Blue"), NodePath("../Game/Button_Green")]
 
 [node name="GameState" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 unique_name_in_owner = true
@@ -73,9 +73,6 @@ text = "STATE_Menu"
 script = ExtResource("3_5jr5n")
 allow_pass_through = true
 
-[node name="Show Game" type="Node" parent="GameState/STATE_Begin_Simon"]
-script = ExtResource("8_rybjo")
-
 [node name="Transition -> Simon_Say" type="Node" parent="GameState/STATE_Begin_Simon" node_paths=PackedStringArray("target_state")]
 script = ExtResource("4_v1sfh")
 target_state = NodePath("../../STATE_Simon_Say")
@@ -85,6 +82,9 @@ position = Vector2(0, 96)
 points = PackedVector2Array(108, 56, 109, 99, 95, 83, 122, 83, 109, 100)
 width = 5.0
 script = ExtResource("5_i1snx")
+
+[node name="Show Game" type="Node" parent="GameState/STATE_Begin_Simon"]
+script = ExtResource("8_rybjo")
 
 [node name="Dia_STATE_Begin_Simon" type="ColorRect" parent="GameState/STATE_Begin_Simon"]
 offset_top = 98.0
@@ -270,16 +270,17 @@ offset_left = 333.0
 offset_top = 150.0
 offset_right = 533.0
 offset_bottom = 350.0
+script = ExtResource("12_jibsw")
 
 [node name="SimonColorRect" type="ColorRect" parent="Game/Button_Red"]
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 200.0
 mouse_filter = 1
-color = Color(1, 0, 0, 0.490196)
+color = Color(0.94902, 0.560784, 0.560784, 1)
 script = ExtResource("12_tnyo0")
 say_color = Color(0.94902, 0, 0, 1)
-ordinary_color = Color(0.94902, 0, 0, 0.545098)
+ordinary_color = Color(0.95, 0.5605, 0.5605, 1)
 
 [node name="Button_Yellow" type="Button" parent="Game"]
 custom_minimum_size = Vector2(200, 200)
@@ -288,16 +289,18 @@ offset_left = 544.0
 offset_top = 150.0
 offset_right = 744.0
 offset_bottom = 350.0
+script = ExtResource("12_jibsw")
+button_index = 1
 
 [node name="SimonColorRect" type="ColorRect" parent="Game/Button_Yellow"]
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 200.0
 mouse_filter = 1
-color = Color(1, 1, 0, 0.490196)
+color = Color(0.870588, 0.835294, 0.529412, 1)
 script = ExtResource("12_tnyo0")
-say_color = Color(1, 1, 0, 1)
-ordinary_color = Color(1, 1, 0, 0.490196)
+say_color = Color(0.999999, 0.991149, 0.412455, 1)
+ordinary_color = Color(0.87, 0.83607, 0.5307, 1)
 
 [node name="Button_Blue" type="Button" parent="Game"]
 custom_minimum_size = Vector2(200, 200)
@@ -306,16 +309,18 @@ offset_left = 333.0
 offset_top = 361.0
 offset_right = 533.0
 offset_bottom = 561.0
+script = ExtResource("12_jibsw")
+button_index = 2
 
 [node name="SimonColorRect" type="ColorRect" parent="Game/Button_Blue"]
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 200.0
 mouse_filter = 1
-color = Color(0, 0, 1, 0.490196)
+color = Color(0.658824, 0.658824, 1, 1)
 script = ExtResource("12_tnyo0")
 say_color = Color(0, 0, 1, 1)
-ordinary_color = Color(0, 0, 1, 0.490196)
+ordinary_color = Color(0.658824, 0.658824, 1, 1)
 
 [node name="Button_Green" type="Button" parent="Game"]
 custom_minimum_size = Vector2(200, 200)
@@ -324,16 +329,18 @@ offset_left = 544.0
 offset_top = 361.0
 offset_right = 744.0
 offset_bottom = 561.0
+script = ExtResource("12_jibsw")
+button_index = 3
 
 [node name="SimonColorRect" type="ColorRect" parent="Game/Button_Green"]
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 200.0
 mouse_filter = 1
-color = Color(0, 1, 0, 0.490196)
+color = Color(0.576471, 0.768627, 0.576471, 1)
 script = ExtResource("12_tnyo0")
 say_color = Color(0, 1, 0, 1)
-ordinary_color = Color(0, 1, 0, 0.490196)
+ordinary_color = Color(0.5775, 0.77, 0.5775, 1)
 
 [node name="CorrectPanel" type="Panel" parent="."]
 modulate = Color(0, 0, 0, 0)
@@ -371,6 +378,7 @@ vertical_alignment = 1
 
 [node name="Menu" type="Control" parent="."]
 unique_name_in_owner = true
+layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0

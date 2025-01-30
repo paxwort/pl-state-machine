@@ -9,10 +9,8 @@ func _ready():
 
 func _start_listening():
 	pattern = %Simon.next_pattern
-	var i = 0
-	for button in %Simon.Buttons:
-		button.pressed.connect(_button_pressed.bind(i))
-		i += 1
+	for button in %Game.find_children("Button_*"):
+		button.pressed.connect(_button_pressed.bind(button.button_index))
 
 func _button_pressed(index : int):
 	var target_index = pattern.pop_front()
