@@ -33,6 +33,12 @@ func _connect_transitions():
 		for transition in target_state.find_children("*", "PLStateTransition", false):
 			connected_transitions.push_back(transition as PLStateTransition)
 
+func disable_transition():
+	transition_disabled = true
+
+func enable_transition():
+	transition_disabled = false
+
 func transition():
 	if !transition_disabled:
 		_start_transition()
