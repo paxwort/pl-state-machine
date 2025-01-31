@@ -49,14 +49,16 @@ func _start_transition():
 			await source_state.exit_unlocked
 		source_state.exited_state.connect(_end_transition)
 		source_state.exit_state()
+	else:
+		push_warning("PLStateTransition %s failed to obtain lock. Did not transition")
 
 func _end_transition():
-	target_state.enter_state()
 	if source_state.exited_state.is_connected(_end_transition):
 		source_state.exited_state.disconnect(_end_transition)
 	if source_state.machine.transition_unlock(self):
+		target_state.enter_state()
 		source_state.machine._next_in_path()
-	transitioned.emit()
+		transitioned.emit()
 
 func abort_transition():
 	source_state.machine.transition_unlock(self)

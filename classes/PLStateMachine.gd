@@ -3,7 +3,7 @@ class_name PLStateMachine extends Node
 
 var _states : Dictionary = {}
 var _root_transition : PLStateTransition
-var active_state : PLState
+var active_state : PLState = null
 @export var initial_state : PLState
 
 func _enter_tree():
@@ -16,10 +16,9 @@ func _ready():
 	
 func _start_machine():
 	if initial_state:
-		active_state = initial_state
+		initial_state.enter_state()
 	else:
-		active_state = _states.keys().front()
-	active_state.enter_state()
+		_states.keys().front().enter_state()
 
 var current_path : Array[PLStateTransition] = []
 
@@ -54,14 +53,15 @@ func transition_unlock(transition : PLStateTransition) -> bool:
 
 func _state_entered(state : PLState):
 	if active_state != null:
-		push_warning("A state was entered when the StateMachine %s was not aware of a previous state being exited"%name)	
-	active_state = state
+		push_error("PLState %s was entered when the PLStateMachine %s was not aware of a previous state being exited"%[state.name, name, active_state.name])	
+	else:
+		active_state = state
 
 func _state_exited(state : PLState):
 	if active_state == state:
 		active_state = null
 	else:
-		push_warning("A state was exited when the StateMachine %s was not aware of its previous activity"%name)
+		push_warning("PLState %s was exited when the PLStateMachine %s was not aware of its previous activity"%[state, name])
 
 func _get_path_to_state(source_state : PLState, target_state : PLState) -> Array[PLStateTransition]:
 	if !_states.has(target_state) or !_states.has(source_state):
@@ -101,8 +101,6 @@ func _child_entered_tree(node : Node):
 		_states[node] = []
 		node.child_entered_tree.connect(_state_child_entered_tree.bind(node))
 		node.child_exiting_tree.connect(_state_child_exiting_tree.bind(node))
-		node.exited_state.connect(_state_exited.bind(node))
-		node.entered_state.connect(_state_entered.bind(node))
 
 func _child_exiting_tree(node : Node):
 	if node is PLState:
@@ -111,10 +109,6 @@ func _child_exiting_tree(node : Node):
 			node.child_entered_tree.disconnect(_state_child_entered_tree)
 		if node.child_exiting_tree.is_connected(_state_child_exiting_tree):
 			node.child_exiting_tree.disconnect(_state_child_exiting_tree)
-		if node.exited_state.is_connected(_state_exited):
-			node.exited_state.disconnect(_state_exited)
-		if node.entered_state.is_connected(_state_entered):
-			node.exited_state.disconnect(_state_entered)
 
 func _state_child_entered_tree(node : Node, state : PLState):
 	if node is PLStateTransition and _states.has(state):
